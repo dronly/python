@@ -33,5 +33,5 @@ class TestDict(unittest.TestCase):
 		with self.assertRaises(AttributeError):
 			value = d.empty
 
-if __name__ == '__main__':
-	unittest.main()
+#if __name__ == '__main__':
+#	unittest.main()
