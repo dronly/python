@@ -5,3 +5,6 @@ import hashlib
 
 def calc_md5(password):
 	
+
+db = {
+	'
