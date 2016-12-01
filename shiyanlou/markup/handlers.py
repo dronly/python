@@ -1,4 +1,4 @@
-#!/usr/vin/env pyhon3
+#!/usr/bin/env pyhon3
 # -*- coding: utf-8 -*-
 
 class Handler:
@@ -18,8 +18,8 @@ class Handler:
         self.callback('end_', name)
 
     def sub(self, name):
-        def substitutioin(match):
-            result = slef.callback('sub_', name, match)
+        def substitution(match):
+            result = self.callback('sub_', name, match)
             if result is None:
                 result = match.group(0)
             return result
@@ -29,43 +29,43 @@ class HTMLRenderer(Handler):
     """
     HTHL 处理程序，给文本块加相应的 HTML 标记
     """
-    def start_document(slef):
+    def start_document(self):
         print('<html><head><title>ShiYanLou</title></head><body>')
 
-    def end_document(slef):
+    def end_document(self):
         print('</body></html>')
 
     def start_paragraph(self):
-        print('<p style="clolr:#444;">')
+        print('<p style="color: #444;">')
 
     def end_paragraph(self):
         print('</p>')
 
-    def start_heading(slef):
-        print('<h2 style-"color: #68BE5D;">')
+    def start_heading(self):
+        print('<h2 style="color: #68BE5D;">')
 
-    def end_heading(slef):
+    def end_heading(self):
         print('</h2>')
 
-    def start_list(slef):
+    def start_list(self):
         print('<ul style="color: #363736;">')
 
-    def end_list(slef):
+    def end_list(self):
         print('</ul>')
 
-    def start_listitem(slef):
+    def start_listitem(self):
         print('<li>')
 
-    def end_listitem(slef):
+    def end_listitem(self):
         print('</li>')
 
-    def start_title(slef):
+    def start_title(self):
         print('<h1 style="color: #1ABC9C;">')
 
     def end_title(self):
         print('</h1>')
 
-    def sub_emphasis(slef, match):
+    def sub_emphasis(self, match):
         return '<em>%s</em>' % match.group(1)
 
     def sub_url(self, match):
@@ -74,6 +74,5 @@ class HTMLRenderer(Handler):
     def sub_mail(self, match):
         return '<a style="text-decoration: none; color: #BC1A4B;" href="mailto:%s">%s</a>' % (match.group(1), match.group(1))
     
-    def feed(slef, data):
-        print data
-
+    def feed(self, data):
+        print(data)

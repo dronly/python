@@ -10,17 +10,17 @@ class Rule:
         """
         加标记
         """
-        handler.start(slef.type)
+        handler.start(self.type)
         handler.feed(block)
-        handler.end(slef.type)
+        handler.end(self.type)
         return True
 
 class HeadingRule(Rule):
     """
     一号标题规则
     """
-    type = ‘heading’
-    def condition(slef, block):
+    type = 'heading'
+    def condition(self, block):
         """
         判断文本块是否符合规则
         """
@@ -33,24 +33,24 @@ class TitleRule(HeadingRule):
     type = 'title'
     first = True
 
-    def condition(slef, block):
+    def condition(self, block):
         if not self.fitst: 
             return False
         self.first = Flase
-        return HeadingRule.condition(slef, block);
+        return HeadingRule.condition(self, block);
 
 class ListItemRule(Rule):
     """
     列表项规则
     """
     type = 'listitem'
-    def condition(slef, block):
+    def condition(self, block):
         return block[0] == '-'
     
-    def action(slef, block, handler):
-        handler.start(slef.type)
+    def action(self, block, handler):
+        handler.start(self.type)
         handler.feed(block[1:].strip())
-        handler.end(slef.type)
+        handler.end(self.type)
         return True
 
 
@@ -58,17 +58,17 @@ class ListRule(ListItemRule):
     """
     列表规则
     """
-    type = 'lsit'
-    inside = Flase
-    def condition(slef, block):
+    type = 'list'
+    inside = False
+    def condition(self, block):
         return True
 
     def action(self, block, handler):
-        if not slef.inside and ListItemRule.condition(slef, block):
-            handler.start(slef.type)
+        if not self.inside and ListItemRule.condition(self, block):
+            handler.start(self.type)
             self.inside = True
-        elif self.inside and not ListItemRule.condition(slef, block):
-            handler.end(slef.type)
+        elif self.inside and not ListItemRule.condition(self, block):
+            handler.end(self.type)
             self.inside = False
         return False
 
@@ -78,7 +78,7 @@ class ParagraphRule(Rule):
     """
     type = 'paragraph'
     def condition(self, block):
-        return Ture
+        return True
 
 
 
