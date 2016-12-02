@@ -1,5 +1,7 @@
 #!/usr/vin/env python3
 # -*- codiong: utf-8 -*-
+import logging
+logging.basicConfig(level=logging.INFO)
 
 class Rule:
     """
@@ -34,9 +36,9 @@ class TitleRule(HeadingRule):
     first = True
 
     def condition(self, block):
-        if not self.fitst: 
+        if not self.first: 
             return False
-        self.first = Flase
+        self.first = False
         return HeadingRule.condition(self, block);
 
 class ListItemRule(Rule):

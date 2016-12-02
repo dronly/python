@@ -1,6 +1,9 @@
 #!/usr/bin/env pyhon3
 # -*- coding: utf-8 -*-
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 class Handler:
     """
     处理程序父类

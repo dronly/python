@@ -5,6 +5,8 @@ import sys,re
 from handlers import *
 from util import *
 from rules import *
+import logging
+logging.basicConfig(level=logging.INFO)
 
 class Parser:
     """
@@ -37,12 +39,12 @@ class Parser:
         for block in blocks(file):
             for filter in self.filters:
                 block = filter(block, self.handler)
-            for rule in slef.rules:
+            for rule in self.rules:
                 if rule.condition(block):
                     last = rule.action(block, self.handler)
                     if last:
                         break
-        sefl.handler.end('document')
+        self.handler.end('document')
 
 class BasicTextParser(Parser):
     """
@@ -57,7 +59,7 @@ class BasicTextParser(Parser):
         self.addRule(ParagraphRule())
 
         self.addFilter(r'\*(.+?)\*', 'emphasis')
-        self.addFilter(r'(http://[\.a-zA-Z/]+', 'url')
+        self.addFilter(r'(http://[\.a-zA-Z/])+', 'url')
         self.addFilter(r'([\.a-zA-Z]+@[\.a-zA-Z]+[a-zA-Z]+)', 'mail')
 
 """
