@@ -4,7 +4,7 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 
-class Handler:
+class Handler: # handler 处理文件
     """
     处理程序父类
     """
@@ -32,13 +32,13 @@ class HTMLRenderer(Handler):
     """
     HTHL 处理程序，给文本块加相应的 HTML 标记
     """
-    def start_document(self):
+    def start_document(self): # document-文件
         print('<html><head><title>ShiYanLou</title></head><body>')
 
     def end_document(self):
         print('</body></html>')
 
-    def start_paragraph(self):
+    def start_paragraph(self):# parahraph-段落
         print('<p style="color: #444;">')
 
     def end_paragraph(self):
