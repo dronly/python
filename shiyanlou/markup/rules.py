@@ -3,6 +3,10 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 
+"""
+这个文件内容是给每一种文本类型（一级标题，二级标题，列表等）定义判断规则。
+"""
+
 class Rule:
     """
     规则父类
@@ -12,9 +16,9 @@ class Rule:
         """
         加标记
         """
-        handler.start(self.type)
-        handler.feed(block)
-        handler.end(self.type)
+        handler.start(self.type) # 标签头
+        handler.feed(block) # 标签内容
+        handler.end(self.type) # 标签尾
         return True
 
 class HeadingRule(Rule):

@@ -4,11 +4,11 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 
-class Handler: # handler 处理文件
+class Handler: # handler-处理程序
     """
     处理程序父类
     """
-    def callback(self, prefix, name, *args):
+    def callback(self, prefix, name, *args): # prefix-字首
         method = getattr(self, prefix + name, None)
         if callable(method): 
             return method(*args)

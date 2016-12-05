@@ -35,6 +35,7 @@ class Parser:
         """
         解析
         """
+        #print(file)  ---> <_io.TextIOWrapper name='<stdin>' mode='r' encoding='UTF-8'>
         self.handler.start('document')
         for block in blocks(file):
             for filter in self.filters:
