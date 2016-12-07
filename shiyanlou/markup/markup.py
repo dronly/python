@@ -59,9 +59,9 @@ class BasicTextParser(Parser):
         self.addRule(HeadingRule())
         self.addRule(ParagraphRule())
 
-        self.addFilter(r'\*(.+?)\*', 'emphasis')
-        self.addFilter(r'(http://[\.a-zA-Z/])+', 'url')
-        self.addFilter(r'([\.a-zA-Z]+@[\.a-zA-Z]+[a-zA-Z]+)', 'mail')
+        self.addFilter(r'\*(.+?)\*', 'emphasis') # 
+        self.addFilter(r'(http://[\.a-zA-Z/]+)', 'url') # 提取url地址正则。
+        self.addFilter(r'([\.a-zA-Z]+@[\.a-zA-Z]+[a-zA-Z]+)', 'mail') # 提取emali地址正则
 
 """
 运行程序

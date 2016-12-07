@@ -4,13 +4,17 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 
+"""
+Handler类 处理程序父类，有一个回调函数 callback 可以根据传入的name参数调用相应的方法。
+"""
+
 class Handler: # handler-处理程序
     """
     处理程序父类
     """
     def callback(self, prefix, name, *args): # prefix-字首
-        method = getattr(self, prefix + name, None)
-        if callable(method): 
+        method = getattr(self, prefix + name, None) # getattr（x, y) 等价与 x.y  从一个对象中获得名字为y的属性。
+        if callable(method):  # callable 返回某个对象是否可以被调用
             return method(*args)
 
     def start(self, name):

@@ -4,7 +4,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 """
-这个文件内容是给每一种文本类型（一级标题，二级标题，列表等）定义判断规则。
+这个模块内容是给每一种文本类型（一级标题，二级标题，列表等）定义判断规则。
+每一个Rule子类都有condition方法，用来判断文本是否它符合规则。从Rule继承的action方法用来给符合的文本加标记。
 """
 
 class Rule:
@@ -24,17 +25,27 @@ class Rule:
 class HeadingRule(Rule):
     """
     一号标题规则
+    判断文本块是否是标题
     """
     type = 'heading'
     def condition(self, block):
         """
         判断文本块是否符合规则
         """
+        # 当不含有换行符，长度大于70 不以：结尾时， block为 标题。
         return not '\n' in block and len(block) <= 70 and not block[-1] == ':'
 
+
+"""
+TitleRule与HeadingRule 结合起来判断标题是一级标题还是二级标题。
+在 markup.py 中的 BasicTextParser 中先添加 TitleRule 规则，后添加 HeadingRule 规则。
+根据 TitleRule 规则可以知道，会把第一个 block 设为一级标题，后边的 block 都会调用 HeadingRule 规则。
+"""
 class TitleRule(HeadingRule):
     """
     二号标题规则
+    判断是否是第一次出现标题。
+    action 方法打印 <h1 style="color: #1ABC9C;">%s</h1>
     """
     type = 'title'
     first = True
