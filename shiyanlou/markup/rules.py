@@ -96,7 +96,3 @@ class ParagraphRule(Rule):
     type = 'paragraph'
     def condition(self, block):
         return True
-
-
-
-

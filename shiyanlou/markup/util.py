@@ -21,6 +21,3 @@ def blocks(file):
         elif block: #如果line.strip()为假，判断block是否为空。
             yield ''.join(block).strip() #  如果block不为空，将block中的字符串连接其来，连接符为空格
             block = [] # 清除block 缓存。
-
-
-    
