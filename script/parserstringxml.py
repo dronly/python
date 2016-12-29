@@ -3,6 +3,9 @@
 
 import xml.dom.minidom
 import re
+import argparse
+import sys
+import os
 
 # 功能： 将 strings.xml 中含有格式化字符串，时间格式化字符串的条目提取出来并保存
 # 2016-12-19
@@ -10,12 +13,14 @@ import re
 """
 解析xml文件返回 list
 """
+
+
 def parserStringXml(file):
     dom = xml.dom.minidom.parse(file)
     root = dom._get_documentElement()
     stringslist = root.getElementsByTagName('string')
     listtmp = []
-    #return [string.getAttribute('name') if  for string in stringslist]
+    # return [string.getAttribute('name') if  for string in stringslist]
     for string in stringslist:
         name = string.getAttribute('name')
 
@@ -54,19 +59,38 @@ def judegFormatString(string):
             return True
 
     filter = r'.*%[0-9]{1}\$[sd]{1}|%[sd]{1}'
-    formatString = re.match(filter,string)
-    #print(formatString)
+    formatString = re.match(filter, string)
     if formatString != None:
         return True
     return False
 
 
 if __name__ == "__main__":
-    listString = parserStringXml('strings.xml')
+    parser = argparse.ArgumentParser(description='统计apk的strings.xml中格式化字符串数量脚本')
+    parser.add_argument('filePaths', nargs='+', help='输入反编译apk后得到的strings.xml路径')
+    parser.add_argument('-o', '--output', help='输出目录，输出提取出来的格式化字符串到输出目录下的format_string.xml')
+    args = parser.parse_args()
+
+    if args.filePaths[-3:] == 'xml':
+        print('请输入xml文件路径')
+        sys.exit()
+
+    if args.output is not None:
+        if not os.path.isdir(args.output):
+            print('Invalid Directory: ' + args.output)
+            sys.exit()
+        else:
+            if args.output[-1] != '/':
+                args.output += '/'
+        args.output += 'format_strings.xml'
+    else:
+        args.output = 'format_strings.xml'
+    listString = parserStringXml(args.filePaths[0])
     tmplist = []
     for list in listString:
         if judegFormatString(list[1]):
             tmplist.append(list)
-    writeStringXml(tmplist,'format_strings.xml')
-    print(len(tmplist)/len(listString))
-    print(format(len(tmplist)/len(listString), '.2%'))
+    writeStringXml(tmplist, args.output)
+    print('strings 总数量：', len(listString))
+    print('含有格式化字符串的 strings 数量：', len(tmplist))
+    print('格式化字符串占的百分比：', format(len(tmplist)/len(listString), '.2%'))
