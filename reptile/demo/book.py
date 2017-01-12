@@ -11,30 +11,54 @@ num = 0
 start_time = time.time()
 
 
-def getbook(url, i):
-    r = requests.get(url + str(i))
-    # print(url+str(i))
+def get_detial(url):
+    # 获取专栏详细信息  url: 专栏地址
+    r = requests.get(url)
     html = r.content
     bsobj = BeautifulSoup(html)
-    book_list_node = bsobj.findAll('div', class_="info")
-    for book in book_list_node:
-        title = book.h4.get_text()
-        link = book.h4.a["href"]
-        if book.h5 is not None:
-            sub_title = book.h5.get_text()
-        else:
-            sub_title = ""
-        author = book.findAll("div", class_="author")[0].a.get_text()
-        category = [string for string in book.findAll("div", class_="category")[0].stripped_strings][1]
-        intro = book.findAll("div", class_="intro")[0].get_text()
-        print("标题:"+title, "\n链接:"+link, "\n副标题:" + sub_title,
-              "\n作者:"+author, "\n类型:"+category, "\n介绍:"+intro)
-        print('======================================')
-    return book_list_node
 
-for i in range(0, 1790, 10):
-    #print("第%d本书" % num, )
-    getbook(initial_url, str(i))
+    book_node = bsobj.find('div', class_="info")
+    title = book_node.h1.get_text()
+
+    subtitle = book_node.find("div", class_="subtitle").get_text()
+
+    author = book_node.find("a", class_="author-inline labeled-text").get_text()
+
+    category = book_node.find("a", itemprop="url").get_text()
+
+    score = bsobj.findAll("span", class_="score")  # [0].get_text()
+    amount = bsobj.findAll("span", class_="amount")  # [0].get_text()
+    interactioncount = bsobj.findAll("span", class_="sub-number")
+    if len(score) > 0:
+        # print(score)
+        score = float(score[0].get_text())
+    else:
+        score = 0
+    if len(amount) > 0:
+        amount = amount[0].get_text()
+        amount = int(''.join(filter(str.isdigit, amount)))
+    else:
+        amount = 0
+    if len(interactioncount) > 0:
+        interactioncount = interactioncount[0].get_text()
+        interactioncount = int(''.join(filter(str.isdigit, interactioncount)))
+    return [title, subtitle, author, category, score, amount, interactioncount]
+
+
+with open("book2.txt", "w") as f:
+
+    for i in range(1430, 1790, 10):
+        r = requests.get(initial_url + str(i))
+        # print(url+str(i))
+        html = r.content
+        bsobj = BeautifulSoup(html)
+        book_list_node = bsobj.findAll('div', class_="info")
+
+        for book in book_list_node:
+            link = book.h4.a["href"]
+            num += 1
+            print(("第%d本书"+str(get_detial(link))[1:-1]) % num)
+            f.write(str(get_detial(link))[1:-1]+"\n")
 
 end_time = time.time()
 times = end_time - start_time
