@@ -45,9 +45,9 @@ def get_detial(url):
     return [title, subtitle, author, category, score, amount, interactioncount]
 
 
-with open("book2.txt", "w") as f:
+with open("book.cvf", "w") as f:
 
-    for i in range(1430, 1790, 10):
+    for i in range(0, 1790, 10):
         r = requests.get(initial_url + str(i))
         # print(url+str(i))
         html = r.content
