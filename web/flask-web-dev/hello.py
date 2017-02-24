@@ -8,6 +8,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
+from flask_mail import Mail, Message
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,11 +18,21 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
     'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.163.com'
+app.config['MAIL_PORT'] = 25
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['FLASK_MAIL_SUBJECT_PREFIX'] = '[Flask]'
+app.config['FLASK_MAIL_SENDER'] = 'Flasky Admin <dronly@163.com>'
+app.config['FLASK_ADMIN'] = os.environ.get('FLASK_ADMIN')
+
 
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
+mail = Mail(app)
 
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
@@ -45,6 +56,14 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+def send_email(to, subject, template, **kwargs):
+    msg = Message(app.config['FLASK_MAIL_SUBJECT_PREFIX'] + ' ' + subject,
+                  sender=app.config['FLASK_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)
 
 
 class NameForm(Form):
@@ -76,6 +95,8 @@ def index():
             user = User(username=form.name.data)
             db.session.add(user)
             session['know'] = False
+            if app.config['FLASK_ADMIN']:
+                send_email(app.config['FLASK_ADMIN'], 'New User', 'mail/new_user', user=user)
         else:
             session['know'] = True
         session['name'] = form.name.data
